@@ -14,7 +14,7 @@ describe("Create Car Specification", () => {
     createCarSpecificationUseCase = new CreateCarSpecificationUseCase(carsRepositoryInMemory, specificationsRepositoryInMemory);
   })
 
-  it("should not be able to add a new specification to a nonexistent car", () => {
+  it("should not be able to add a new specification to a nonexistent car", async () => {
     expect(async () => {
       const car_id = "1234";
       const specifications_id = ["54321"];

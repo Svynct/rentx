@@ -6,7 +6,6 @@ let createCategoryUseCase: CreateCategoryUseCase;
 let categoriesRepositoryInMemory: CategoriesRepositoryInMemory;
 
 describe("Create category", () => {
-
   beforeEach(() => {
     categoriesRepositoryInMemory = new CategoriesRepositoryInMemory();
     createCategoryUseCase = new CreateCategoryUseCase(categoriesRepositoryInMemory);
@@ -25,7 +24,7 @@ describe("Create category", () => {
     expect(category).toHaveProperty("id");
   })
 
-  it("Should not be able to create a new category with an existing name", () => {
+  it("Should not be able to create a new category with an existing name", async () => {
     expect(async () => {
       const categoryDTO = {
         name: "Category test",

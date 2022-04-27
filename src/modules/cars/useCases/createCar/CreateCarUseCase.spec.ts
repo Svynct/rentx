@@ -6,7 +6,6 @@ let createCarUseCase: CreateCarUseCase;
 let carsRepositoryInMemory: CarsRepositoryInMemory;
 
 describe("Create Car", () => {
-
   beforeEach(() => {
     carsRepositoryInMemory = new CarsRepositoryInMemory();
     createCarUseCase = new CreateCarUseCase(carsRepositoryInMemory);
@@ -26,7 +25,7 @@ describe("Create Car", () => {
     expect(car).toHaveProperty("id");
   })
 
-  it("should not be able to create a car with existing license plate", () => {
+  it("should not be able to create a car with existing license plate", async () => {
     expect(async () => {
       await createCarUseCase.execute({
         name: "Car1",
