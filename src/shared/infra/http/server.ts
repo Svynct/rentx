@@ -44,4 +44,5 @@ app.listen(3333, () => {
   console.log("/cars/available -> [ GET ]")
   console.log("/cars/specifications -> [ POST ]")
   console.log("/cars/images -> [ POST ]")
+  console.log("/rentals -> [ POST ]")
 });
