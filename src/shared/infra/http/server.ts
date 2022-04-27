@@ -1,3 +1,6 @@
 import { app } from "./app";
 
-app.listen(3333, () => console.log("Server is runnint!"));
+app.listen(3333, () => {
+  console.log("");
+  console.log("Server is running on http://localhost:3333")
+});
