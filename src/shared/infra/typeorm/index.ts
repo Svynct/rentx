@@ -6,13 +6,13 @@ interface IOptions {
 
 getConnectionOptions().then(options => {
   const newOptions = options as IOptions;
-  newOptions.host = "database";
+  newOptions.host = "localhost";
   createConnection({
     ...options
   });
 });
 
-export default async(host = "database"): Promise<Connection> => {
+export default async(host = "localhost"): Promise<Connection> => {
   const defaultOptions = await getConnectionOptions();
   
   return createConnection(
