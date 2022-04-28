@@ -10,18 +10,18 @@ class CarsRepository implements ICarsRepository {
   constructor() {
     this.repository = getRepository(Car);
   }
-  
+
   async create({
-      brand,
-      category_id,
-      daily_rate,
-      description,
-      fine_amount,
-      license_plate,
-      name,
-      specifications,
-      id
-    }: ICreateCarDTO): Promise<Car> {
+    brand,
+    category_id,
+    daily_rate,
+    description,
+    fine_amount,
+    license_plate,
+    name,
+    specifications,
+    id
+  }: ICreateCarDTO): Promise<Car> {
     const car = this.repository.create({
       brand,
       category_id,
@@ -43,7 +43,7 @@ class CarsRepository implements ICarsRepository {
     const car = await this.repository.findOne({
       license_plate
     });
-    
+
     return car;
   }
 
@@ -55,7 +55,7 @@ class CarsRepository implements ICarsRepository {
     if (brand) {
       carsQuery.andWhere("c.brand = :brand", { brand: brand });
     }
-    
+
     if (name) {
       carsQuery.andWhere("c.name = :name", { name: name });
     }
@@ -63,15 +63,25 @@ class CarsRepository implements ICarsRepository {
     if (category_id) {
       carsQuery.andWhere("c.category_id = :category_id", { category_id: category_id });
     }
-    
+
     const cars = await carsQuery.getMany();
-    
+
     return cars;
   }
 
-  async findById(car_id: string): Promise<Car> {
-    const car = await this.repository.findOne(car_id);
+  async findById(id: string): Promise<Car> {
+    const car = await this.repository.findOne(id);
     return car;
+  }
+
+  async updateAvailable(id: string, available: boolean): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .update()
+      .set({ available })
+      .where("id = :id")
+      .setParameters({ id })
+      .execute();
   }
 }
 

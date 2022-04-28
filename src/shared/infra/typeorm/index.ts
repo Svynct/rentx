@@ -6,19 +6,20 @@ interface IOptions {
 
 getConnectionOptions().then(options => {
   const newOptions = options as IOptions;
-  newOptions.host = "localhost";
+  newOptions.host = process.env.NODE_ENV === "test" ? "localhost" : "database"
   createConnection({
-    ...options
+    ...options,
+    synchronize: false
   });
 });
 
-export default async(host = "localhost"): Promise<Connection> => {
+export default async(host = "database"): Promise<Connection> => {
   const defaultOptions = await getConnectionOptions();
-  
-  return createConnection(
-    Object.assign(defaultOptions, {
-      host: process.env.NODE_ENV === "test" ? "localhost" : host,
-      database: process.env.NODE_ENV === "test" ? "rentx_test" : defaultOptions.database
-    })
-  );
+
+  Object.assign(defaultOptions, {
+    host: process.env.NODE_ENV === "test" ? "localhost" : host,
+    database: process.env.NODE_ENV === "test" ? "rentx_test" : defaultOptions.database
+  })
+
+  return createConnection(defaultOptions);
 }
