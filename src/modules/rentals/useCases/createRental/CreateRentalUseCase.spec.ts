@@ -43,50 +43,30 @@ describe("Create Rental", () => {
   })
 
   it("should not be able to create a new rental if there is another open to the same user", async () => {
-    const car = await carsRepositoryInMemory.create({
-      name: "test",
-      description: "car test",
-      daily_rate: 100,
-      license_plate: "test",
-      fine_amount: 40,
-      category_id: "1234",
-      brand: "brand"
-    })
-    
-    await createRentalUseCase.execute({
+    await rentalsRepositoryInMemory.create({
       user_id: "test",
-      car_id: car.id,
-      expected_return_date: dayAdd24Hours
-    });
+      car_id: "54321",
+      expected_return_date: new Date()
+    })
 
     await expect(createRentalUseCase.execute({
       user_id: "test",
-      car_id: "123",
+      car_id: "12345",
       expected_return_date: dayAdd24Hours
     })
     ).rejects.toEqual(new AppError("There's a rental in progress for user!"));
   })
 
   it("should not be able to create a new rental if there is another open to the same car", async () => {
-    const car = await carsRepositoryInMemory.create({
-      name: "test",
-      description: "car test",
-      daily_rate: 100,
-      license_plate: "test",
-      fine_amount: 40,
-      category_id: "1234",
-      brand: "brand"
+    await rentalsRepositoryInMemory.create({
+      user_id: "1234",
+      car_id: "test",
+      expected_return_date: new Date()
     })
-    
-    await createRentalUseCase.execute({
-      user_id: "123",
-      car_id: car.id,
-      expected_return_date: dayAdd24Hours
-    });
 
     await expect(createRentalUseCase.execute({
-      user_id: "321",
-      car_id: car.id,
+      user_id: "4321",
+      car_id: "test",
       expected_return_date: dayAdd24Hours
     })
     ).rejects.toEqual(new AppError("Car is unavailable!"));
