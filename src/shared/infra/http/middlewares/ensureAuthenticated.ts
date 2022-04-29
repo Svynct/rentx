@@ -3,13 +3,14 @@ import { verify } from "jsonwebtoken";
 
 import { AppError } from "@shared/errors/AppError";
 import { UsersRepository } from "@modules/accounts/infra/typeorm/repositories/UsersRepository";
+import auth from "@config/auth";
 
 interface IPayload {
   sub: string;
 }
 
 export async function ensureAuthenticated(request: Request, response: Response, next: NextFunction) {
-
+  const { secret_token } = auth;
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
@@ -19,7 +20,7 @@ export async function ensureAuthenticated(request: Request, response: Response, 
   const [, token] = authHeader.split(" ");
 
   try {
-    const { sub: user_id } = verify(token, "69c6e4a394b794ac45a4ca63761bff01") as IPayload;
+    const { sub: user_id } = verify(token, secret_token) as IPayload;
 
     const usersRepository = new UsersRepository();
 
