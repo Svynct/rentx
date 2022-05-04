@@ -3,8 +3,7 @@ import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { IUsersRepository } from "../IUsersRepository";
 
 class UsersRepositoryInMemory implements IUsersRepository {
-
-  users: User[] = []
+  users: User[] = [];
 
   async findById(id: string): Promise<User> {
     return this.users.find(user => user.id === id);

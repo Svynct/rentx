@@ -8,6 +8,7 @@ import { app } from "@shared/infra/http/app";
 import createConnection from "@shared/infra/typeorm";
 
 let connection: Connection;
+let token: string;
 
 describe("Create Category Controller", () => {
   beforeAll(async () => {
@@ -22,6 +23,16 @@ describe("Create Category Controller", () => {
         VALUES('${id}', 'admin', 'admin@rentx.com.br', '${password}', true, 'now()', 'XXXXXX')
       `
     );
+
+    const responseToken = await request(app).post("/sessions")
+      .send({
+        email: "admin@rentx.com.br",
+        password: "admin"
+      })
+
+    const { refresh_token } = responseToken.body;
+
+    token = refresh_token;
   })
 
   afterAll(async () => {
@@ -30,14 +41,6 @@ describe("Create Category Controller", () => {
   })
   
   it("should be able to create a new category", async () => {
-    const responseToken = await request(app).post("/sessions")
-      .send({
-        email: "admin@rentx.com.br",
-        password: "admin"
-      })
-
-    const { token } = responseToken.body;
-
     const response = await request(app).post("/categories").send({
       name: "Category Supertest",
       description: "Category Supertest"
@@ -49,14 +52,6 @@ describe("Create Category Controller", () => {
   })
 
   it("should not be able to create a new category with existing name", async () => {
-    const responseToken = await request(app).post("/sessions")
-      .send({
-        email: "admin@rentx.com.br",
-        password: "admin"
-      })
-
-    const { token } = responseToken.body;
-
     const response = await request(app).post("/categories").send({
       name: "Category Supertest",
       description: "Category Supertest"
