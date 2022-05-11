@@ -1,4 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
+import { SES } from "aws-sdk";
 import { injectable } from "tsyringe";
 import handlebars from "handlebars";
 import fs from "fs";
@@ -6,24 +7,16 @@ import fs from "fs";
 import { IMailProvider } from "../IMailProvider";
 
 @injectable()
-class EtherealMailProvider implements IMailProvider {
+class SESMailProvider implements IMailProvider {
   private client: Transporter;
 
   constructor() {
-    nodemailer.createTestAccount().then(account => {
-      const transporter = nodemailer.createTransport({
-        host: account.smtp.host,
-        port: account.smtp.port,
-        secure: account.smtp.secure,
-        auth: {
-          user: account.user,
-          pass: account.pass
-        }
-      });
-
-      this.client = transporter;
+    this.client = nodemailer.createTransport({
+      SES: new SES({
+        apiVersion: "2010-12-01",
+        region: process.env.AWS_REGION
+      })
     })
-    .catch((err) => console.error(err));
   }
 
   async sendMail(to: string, subject: string, variables: any, path: string): Promise<void> {
@@ -35,7 +28,7 @@ class EtherealMailProvider implements IMailProvider {
 
     const message = await this.client.sendMail({
       to,
-      from: "Rentx <noreply@rentx.com.br>",
+      from: "Rentx <rentx@svynct.dev>",
       subject,
       html: templateHtml
     });
@@ -45,4 +38,4 @@ class EtherealMailProvider implements IMailProvider {
   }
 }
 
-export { EtherealMailProvider };
+export { SESMailProvider };
