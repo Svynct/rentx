@@ -4,5 +4,7 @@
 node_modules
 yarn-error.log
 coverage
-*.png
 dist
+tmp/*
+!tmp/.gitkeep
+ormconfig.json
