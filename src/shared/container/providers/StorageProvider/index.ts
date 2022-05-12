@@ -5,11 +5,11 @@ import { S3StorageProvider } from "./implementations/S3StorageProvider"
 import { IStorageProvider } from "./IStorageProvider"
 
 const diskStorage = {
-  local: LocalStorageProvider,
-  s3: S3StorageProvider
+  local: container.resolve(LocalStorageProvider),
+  s3: container.resolve(S3StorageProvider)
 }
 
-container.registerSingleton<IStorageProvider>(
+container.registerInstance<IStorageProvider>(
   "StorageProvider",
   diskStorage[process.env.disk]
 )
